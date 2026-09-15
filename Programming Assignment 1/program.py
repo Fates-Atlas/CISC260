@@ -1,14 +1,15 @@
 def main():
-    user_value = input("Please enter a value in base 10: ")
+    while (True):
+        user_value = input("Please enter a value in base 10: ")
 
-    if (int(user_value) < 0):
-        print(f"Twos-compliment Binary: {twos_complement(make_binary(user_value))}")
-    else: 
-        print(f"Binary: {make_binary(user_value)}")
+        if (int(user_value) < 0):
+            print(f"Twos-compliment Binary: {twos_complement(make_binary(user_value))}")
+        else: 
+            print(f"Binary: {make_binary(user_value)}")
 
-    print(f"Hexadecimal: {make_hex(user_value)}")
-    val = input("Please enter a value in hexadecimal: ")
-    print(f"Base 10: {hex_to_base10(val)}")
+        print(f"Hexadecimal: {make_hex(user_value)}")
+        val = input("Please enter a value in hexadecimal: ")
+        print(f"Base 10: {hex_to_base10(val)}")
 
 def make_binary(value: str) -> str:
     """
