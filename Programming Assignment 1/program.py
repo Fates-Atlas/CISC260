@@ -1,6 +1,20 @@
-user_value = input("Please enter a value in base 10: ")
+def main():
+    user_value = input("Please enter a value in base 10: ")
+
+    if (int(user_value) < 0):
+        print(f"Twos-compliment Binary: {twos_complement(make_binary(user_value))}")
+        print(f"Hexadecimal: {make_hex(user_value)}")
+    else: 
+        print(f"Binary: {make_binary(user_value)}")
+        print(f"Hexadecimal: {make_hex(user_value)}")
 
 def make_binary(value: str) -> str:
+    """
+    This function takes a user's input (string) and coverts it to 
+    32-bit binary, in the format of 8 nibbles. 
+    Params: value (str) -> The user's input to be calculated
+    Returns: (str) -> The value converted to 32-bit binary
+    """
     result = ""
     bit = 31
     #Allow only positive integers
@@ -17,33 +31,62 @@ def make_binary(value: str) -> str:
             result += "0"
         bit -= 1
     return result
-#Currently not woring. E.G. value = -10. 
+
 def twos_complement(value: str) -> str:
-    bit = 36
-    result = ""
-    count = 0
-
-    while (count<=bit):
-        if value[count] != " ":
-            result += "0" if value[count] == "1" else "1"
-        else: 
-            result += " "
-        count += 1        
-
-    if value[31] == "1":
-        result+= "10"
-    else: 
-        result+= "01"
-
-    return result
+    """
+    This function takes in a user's input (string) and inverts the binary
+    values then adds 1 to the result, in the format of 8 nibbles. 
+    Params: Value (str) -> The user's input to be calculated
+    Returns: (str) -> The inverted 32-bit binary + 1
+    """
+    result = []
+    #Flip the values
+    for char in value:
+        if char != " ":
+            result.append("0" if char == "1" else "1")
+        else:
+            result.append(" ")
+    #Add one and carry over.
+    carry = 1
+    for i, char in reversed(list(enumerate(result))):
+        if char == " ":
+            continue #ignore the rest if true
+        if (char == "1" and carry):
+            result[i] = "0"
+            carry = 1
+        elif (char == "0" and carry):
+            result[i] = "1"
+            carry = 0
+            break #Nothing left to carry over. Exit loop
+    return "".join(result)
 
 def make_hex(value: str) -> str:
-    pass
+    """
+    This function takes in a user's input, converts it to 
+    32-bit binary, then converts it to 32-bit Hexadecimal. 
+    Params: value (str) -> The user's input to be calculated
+    Returns: (str) -> A string representation of the value in hexadecimal
+    """
+    result = ""
+    chars = ["A", "B", "C", "D", "E", "F"]
+    #Convert to binary or twos-complement (if negative)
+    if (int(value) < 0):
+        value = twos_complement(make_binary(int(value)))
+    else:
+        value = make_binary(int(value))
+    #Split the string into 4 bits per section
+    new_arr = value.split()
+    for idx in new_arr:
+        sum = 0
+        #Convert each section into a new list
+        int_list = [int(digit) for digit in idx]
+        #Add the values in each section together
+        for i, num in enumerate(int_list):
+            if num == 1:
+                sum += 2**(3-i)
+        #Determine the hex value for the nibble
+        result += str(sum) if (sum<10) else chars[sum%10]
+    return result
 
 
-
-        
-if (int(user_value) < 0):
-    print(f"Twos-compliment Binary: {twos_complement(make_binary(user_value))}")
-else: 
-    print(f"Binary: {make_binary(user_value)}")
+main()
