@@ -8,6 +8,9 @@ def main():
         print(f"Binary: {make_binary(user_value)}")
         print(f"Hexadecimal: {make_hex(user_value)}")
 
+    val = input("Please enter a value in hexadecimal: ")
+    print(f"Base 10: {hex_to_base10(val)}")
+
 def make_binary(value: str) -> str:
     """
     This function takes a user's input (string) and coverts it to 
@@ -35,7 +38,8 @@ def make_binary(value: str) -> str:
 def twos_complement(value: str) -> str:
     """
     This function takes in a user's input (string) and inverts the binary
-    values then adds 1 to the result, in the format of 8 nibbles. 
+    values then adds 1 to the result, in the format of 8 nibbles. ONLY
+    USED FOR NEGATIVE VALUES
     Params: Value (str) -> The user's input to be calculated
     Returns: (str) -> The inverted 32-bit binary + 1
     """
@@ -48,6 +52,7 @@ def twos_complement(value: str) -> str:
             result.append(" ")
     #Add one and carry over.
     carry = 1
+    #Reverse list AND maintain the original index values
     for i, char in reversed(list(enumerate(result))):
         if char == " ":
             continue #ignore the rest if true
@@ -88,5 +93,32 @@ def make_hex(value: str) -> str:
         result += str(sum) if (sum<10) else chars[sum%10]
     return result
 
+def hex_to_base10(value: str) -> int:
+    """
+    This function takes a user's input in hexadecimal and converts
+    it to base 10. Assume every number is positive. 
+    Params: value (str) -> The user's input to be calculated
+    Returns: (int) The value in base 10. 
+    """
+    sum = 0
+    new_arr = list(value.replace(" ", "").upper())    
+    hex_to_base10 = {
+        "A": 10,
+        "B": 11,
+        "C": 12,
+        "D": 13,
+        "E": 14,
+        "F": 15
+    }
+    #Reverse list but restart index counting 
+    for i, val in enumerate(reversed(new_arr)):
+        multiply = 0
+        if val in "0123456789":
+            multiply = int(val)
+        elif val in hex_to_base10:
+            multiply =  hex_to_base10[val]
+        #Calculate
+        sum += multiply * (16**i)
+    return sum
 
 main()
